@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div xmlns="http://www.w3.org/1999/html">
+    <a href="{{ path('products') }}">List products</a>
+    <h3>Product Details</h3>
+
+    <ul>
+
+
+        <h5>{{ product.productName }}</h5>
+        category : {{ product.category.categoryName}}</br>
+        Date : {{ product.createdAtDate | date }} date('h:m d M Y ')
+
+        <h6>Product Features :</h6>
+        <ul>
+            {% for f in product.features%}
+                <li>{{ f.featureName}}</li>
+            {% endfor %}
+
+        </ul>
+    </ul>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
