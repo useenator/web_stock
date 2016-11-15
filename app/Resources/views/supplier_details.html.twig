@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h3>Supplier Details</h3>
+
+    <ul>
+
+
+        Name : {{ supplier.supplierName }} </br>
+
+        <h6>Products :</h6>
+        <ul>
+            {% for p in supplier.products%}
+                <li>{{ p.productName}}</li>
+            {% endfor %}
+
+        </ul>
+    </ul>
+{% endblock %}
+
+
+

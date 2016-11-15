@@ -19,45 +19,45 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
-class ProductController extends Controller
+class SupplierController extends Controller
 {
 
 
     /**
-     * @Route("/products", name="products")
+     * @Route("/suppliers", name="suppliers")
      */
-    public function productsAction(Request $request)
+    public function suppliersAction(Request $request)
     {
-        // $this->addSomeProducts();
+         //$this->addSomeSuppliers();
         $products = "PRODUCTS";
 
-        $features = $this->getAllFeatures();
-        $products = $this->getAllProducts();
+//        $features = $this->getAllFeatures();
+        $suppliers = $this->getAllSuppliers();
 
-        return $this->render("products.html.twig", ['products' => $products, 'features' => $features]);
+        return $this->render("suppliers.html.twig", [ 'suppliers' => $suppliers]);
     }
 
     /**
-     * @Route("/products/{product_id}", name="productDetails")
-     * @param integer $product_id
+     * @Route("/suppliers/{supplier_id}", name="supplierDetails")
+     * @param integer $supplier_id
      */
-    public function productDetailsAction(Request $request, $product_id)
+    public function supplierDetailsAction(Request $request, $supplier_id)
     {
         //$features = $this->getDoctrine()->getManager()->getRepository('AppBundle:Feature')->findAll();
-        $product = $this->getDoctrine()->getManager()->getRepository('AppBundle:Product')->find($product_id);
+        $supplier = $this->getDoctrine()->getManager()->getRepository('AppBundle:Supplier')->find($supplier_id);
 
-        if (!$product) {
+        if (!$supplier) {
             throw $this->createNotFoundException(
                 'No product found for id ' . $product_id
             );
         }
-        return $this->render("product_details.html.twig", ['product' => $product]);
+        return $this->render("supplier_details.html.twig", ['supplier' => $supplier]);
     }
 
     /**
-     * @Route("/new", name="add_product")
+     * @Route("/supplier/new", name="add_supplier")
      */
-    public function newAction(Request $request)
+    public function newSupplierAction(Request $request)
     {
         $defaultData = array('message' => 'Type your message here');
         $form = $this->createFormBuilder($defaultData)
@@ -71,13 +71,6 @@ class ProductController extends Controller
                 'choice_label' => function ($feature, $key, $index) {
                     /** @var Feature $feature */
                     return strtoupper($feature->getFeatureName());
-                },
-            ])
-            ->add('supplier', ChoiceType::class, [
-                'choices' => $this->getAllSuppliers(),
-                'choice_label' => function ($supplier, $key, $index) {
-                    /** @var Supplier $supplier */
-                    return strtoupper($supplier->getSupplierName());
                 },
             ])
             ->add('category', ChoiceType::class, [
@@ -98,7 +91,6 @@ class ProductController extends Controller
             $product = new Product();
             $product->setProductName($data['productName']);
             $product->setCreatedAtDate($data['createdAtDate']);
-            $product->setSupplier($data['supplier']);
             $product->addFeatures($data['feature']);
             $product->setCategory($data['category']);
 
@@ -113,9 +105,9 @@ class ProductController extends Controller
     }
 
     /**
-     * @Route("/update/{product_id}", name="update_product")
+     * @Route("/supplier/update/{$supplier_id}", name="update_supplier")
      */
-    public function updateAction(Request $request, $product_id)
+    public function updateSupplierAction(Request $request, $supplier_id)
     {
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($product_id);
@@ -135,13 +127,6 @@ class ProductController extends Controller
                 'choice_label' => function ($feature, $key, $index) {
                     /** @var Feature $feature */
                     return strtoupper($feature->getFeatureName());
-                },
-            ])
-            ->add('supplier', ChoiceType::class, [
-                'choices' => $this->getAllSuppliers(),
-                'choice_label' => function ($supplier, $key, $index) {
-                    /** @var Supplier $supplier */
-                    return strtoupper($supplier->getSupplierName());
                 },
             ])
             ->add('category', ChoiceType::class, [
@@ -171,9 +156,9 @@ class ProductController extends Controller
     }
 
     /**
-     * @Route("/delete/{product_id}", name="delete_product")
+     * @Route("/supplier/delete/{$supplier_id}", name="delete_product")
      */
-    public function deleteAction(Request $request, $product_id)
+    public function deleteSupplierAction(Request $request, $supplier_id)
     {
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($product_id);
@@ -187,19 +172,26 @@ class ProductController extends Controller
 
 
     /////////////////////////////////// UTILS Functions ////////////////////////////////////////
-    public function addNewProduct($product)
+    public function addNewSupplier($suppliert)
     {
         $em = $this->getDoctrine()->getManager();
-        $em->persist($product);
+        $em->persist($suppliert);
 
         // actually executes the queries (i.e. the INSERT query)
         $em->flush();
     }
 
-    public function addSomeProducts()
+    public function addSomeSuppliers()
     {
         $category = new Category();
         $category->setCategoryName('Desktop');
+
+        $supplier = new Supplier();
+        $supplier->setSupplierName("supplier 1");
+
+
+        $supplier0 = new Supplier();
+        $supplier0->setSupplierName("supplier 2");
 
 
         $feature = new Feature();
@@ -211,12 +203,13 @@ class ProductController extends Controller
         $feature2 = new Feature();
         $feature2->setFeatureName("intel i3");
 
-        $product = new Product();
-        $product->setProductName("Desktop");
-        $product->setCreatedAtDate(new \DateTime());
-        $product->addFeatures($feature);
-        $product->addFeatures($feature1);
-        $product->setCategory($category);
+        $product0 = new Product();
+        $product0->setProductName("Desktop");
+        $product0->setCreatedAtDate(new \DateTime());
+        $product0->addFeatures($feature);
+        $product0->addFeatures($feature1);
+        $product0->setCategory($category);
+        $product0->setSupplier($supplier);
 
         $product = new Product();
         $product->setProductName('Laptop');
@@ -224,9 +217,24 @@ class ProductController extends Controller
         $product->setCreatedAtDate(new \DateTime());
         $product->addFeatures($feature2);
         $product->setCategory($category);
+        $product->setSupplier($supplier0);
+
+        $product1 = new Product();
+        $product1->setProductName('Laptop');
+        $product1->addFeatures($feature0);
+        $product1->setCreatedAtDate(new \DateTime());
+        $product1->addFeatures($feature2);
+        $product1->setCategory($category);
+        $product1->setSupplier($supplier0);
+
+        $supplier->addProducts($product);
+        $supplier->addProducts($product0);
+        $supplier0->addProducts($product1);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($product);
+        $em->persist($supplier0);
+        $em->persist($supplier);
         //  $em->persist($category);
 
         // actually executes the queries (i.e. the INSERT query)
@@ -234,12 +242,12 @@ class ProductController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\Feature[]|array
+     * @return \AppBundle\Entity\Supplier[]|array
      */
-    public function getAllFeatures()
+    public function getAllSuppliers()
     {
-        $features = $this->getDoctrine()->getManager()->getRepository('AppBundle:Feature')->findAll();
-        return $features;
+        $suppliers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Supplier')->findAll();
+        return $suppliers;
     }
 
     /**
@@ -255,15 +263,6 @@ class ProductController extends Controller
     {
         $Categories = $this->getDoctrine()->getManager()->getRepository('AppBundle:Category')->findAll();
         return $Categories;
-    }
-
-    /**
-     * @return \AppBundle\Entity\Supplier[]|array
-     */
-    public function getAllSuppliers()
-    {
-        $suppliers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Supplier')->findAll();
-        return $suppliers;
     }
 
 

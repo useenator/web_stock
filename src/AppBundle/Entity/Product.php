@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 
 /** @Entity */
@@ -56,6 +57,14 @@ class Product
      */
     private $features;
 
+
+    /**
+     * @ManyToOne(targetEntity="AppBundle\Entity\Supplier", inversedBy="products")
+     * @JoinColumn(name="supplier_id", referencedColumnName="id")
+     */
+    private $supplier;
+
+
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="products",cascade={"persist"})
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
@@ -67,6 +76,17 @@ class Product
      */
     protected $createdAtDate;
 
+
+
+    /**
+     * Product constructor .
+     */
+
+    public function __construct()
+    {
+        $this->createdAtDate = new DateTime();
+        $this->features = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -82,17 +102,6 @@ class Product
     public function setCategory($category)
     {
         $this->category = $category;
-    }
-
-
-    /**
-     * Product constructor .
-     */
-
-    public function __construct()
-    {
-        $this->createdAtDate = new DateTime();
-        $this->features = new ArrayCollection();
     }
 
     public function getCreatedAtDate()
@@ -158,4 +167,21 @@ class Product
     {
         $this->features->add($feature);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * @param mixed $supplier
+     */
+    public function setSupplier($supplier)
+    {
+        $this->supplier = $supplier;
+    }
+
 }
