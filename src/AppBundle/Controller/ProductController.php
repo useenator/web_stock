@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Category;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -66,14 +67,14 @@ class ProductController extends Controller
 //            ->add('createdAtDate', DateTimeType::class)
             ->add('feature', ChoiceType::class, [
                 'choices' => $this->getAllFeatures(),
-                'choice_label' => function($feature, $key, $index) {
+                'choice_label' => function ($feature, $key, $index) {
                     /** @var Feature $feature */
                     return strtoupper($feature->getFeatureName());
                 },
             ])
             ->add('category', ChoiceType::class, [
                 'choices' => $this->getAllCategories(),
-                'choice_label' => function($Categories, $key, $index) {
+                'choice_label' => function ($Categories, $key, $index) {
                     /** @var Category $Categories */
                     return strtoupper($Categories->getCategoryName());
                 },
@@ -102,8 +103,72 @@ class ProductController extends Controller
         ));
     }
 
+    /**
+     * @Route("/update/{product_id}", name="update_product")
+     */
+    public function updateAction(Request $request, $product_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $product = $em->getRepository('AppBundle:Product')->find($product_id);
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id ' . $product_id
+            );
+        }
 
 
+        $form = $this->createFormBuilder($product)
+            ->add('productName', TextType::class)
+            ->add('createdAtDate', DateType::class)
+            ->add('features', ChoiceType::class, [
+                'choices' => $this->getAllFeatures(),
+                'choice_label' => function ($feature, $key, $index) {
+                    /** @var Feature $feature */
+                    return strtoupper($feature->getFeatureName());
+                },
+            ])
+            ->add('category', ChoiceType::class, [
+                'choices' => $this->getAllCategories(),
+                'choice_label' => function ($Categories, $key, $index) {
+                    /** @var Category $Categories */
+                    return strtoupper($Categories->getCategoryName());
+                },
+            ])//$Categories
+            ->add('save', SubmitType::class, array('label' => 'Update product'))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+
+            $em->flush();
+
+            return $this->redirectToRoute('products');
+        }
+
+        return $this->render('default/new_product.html.twig', array(
+            'form' => $form->createView(),
+        ));
+
+    }
+
+
+    /**
+     * @Route("/delete/{product_id}", name="delete_product")
+     */
+    public function deleteAction(Request $request, $product_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $product = $em->getRepository('AppBundle:Product')->find($product_id);
+
+        $em->remove($product);
+        $em->flush();
+
+        return $this->redirectToRoute('products');
+
+    }
 
     public function addNewProduct($product)
     {
@@ -118,7 +183,6 @@ class ProductController extends Controller
     {
         $category = new Category();
         $category->setCategoryName('Desktop');
-
 
 
         $feature = new Feature();
@@ -145,8 +209,8 @@ class ProductController extends Controller
         $product->setCategory($category);
 
         $em = $this->getDoctrine()->getManager();
-       $em->persist($product);
-      //  $em->persist($category);
+        $em->persist($product);
+        //  $em->persist($category);
 
         // actually executes the queries (i.e. the INSERT query)
         $em->flush();
@@ -175,7 +239,6 @@ class ProductController extends Controller
         $Categories = $this->getDoctrine()->getManager()->getRepository('AppBundle:Category')->findAll();
         return $Categories;
     }
-
 
 
 }

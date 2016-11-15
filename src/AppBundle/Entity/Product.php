@@ -141,12 +141,20 @@ class Product
     /**
      * @param mixed $features
      */
-    public function setFeatures($features)
+    public function setFeatures($feature)
     {
-        $this->features = $features;
-    }
+        $this->features->clear();
+        if (!$this->features->contains($feature)) {
+            $this->features->add($feature);
+        }
 
-    public function addFeatures($feature)
+    }
+    //todo: got me to lot of trouble in form builder
+    // $this->features = $features;
+
+
+    public
+    function addFeatures($feature)
     {
         $this->features->add($feature);
     }
