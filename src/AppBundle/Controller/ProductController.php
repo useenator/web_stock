@@ -117,7 +117,7 @@ class ProductController extends Controller
     public function addSomeProducts()
     {
         $category = new Category();
-        $category->setCategoryName('Laptop');
+        $category->setCategoryName('Desktop');
 
 
 
@@ -145,8 +145,8 @@ class ProductController extends Controller
         $product->setCategory($category);
 
         $em = $this->getDoctrine()->getManager();
-        $em->persist($product);
-//        $em->persist($category);
+       $em->persist($product);
+      //  $em->persist($category);
 
         // actually executes the queries (i.e. the INSERT query)
         $em->flush();
