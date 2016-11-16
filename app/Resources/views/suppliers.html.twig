@@ -10,7 +10,18 @@
 
             {% for supplier in suppliers%}
                 </br>
-                Product name : {{ supplier.supplierName}} <a href="{{ path('supplierDetails', {supplier_id: supplier.id}) }}">LINK</a>
+                Product name : {{ supplier.supplierName}}
+                <a href="{{ path('supplierDetails', {supplier_id: supplier.id}) }}">LINK</a>
+                <a href="{{ path('update_supplier', {supplier_id: supplier.id}) }}">Edit</a>
+                <a href="{{ path('delete_supplier', {supplier_id: supplier.id}) }}">Delete</a>
+
+                <h6>Products :</h6>
+                <ul>
+                    {% for p in supplier.products%}
+                        <li>{{ p.productName}}</li>
+                    {% endfor %}
+
+                </ul>
                 {#<a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>#}
                 {#<a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>#}
                 {#category : {{ product.category.categoryName}}</br>#}

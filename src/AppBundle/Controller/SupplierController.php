@@ -47,7 +47,7 @@ class SupplierController extends Controller
 
         if (!$supplier) {
             throw $this->createNotFoundException(
-                'No product found for id ' . $product_id
+                'No product found for id ' . $supplier_id
             );
         }
         return $this->render("supplier_details.html.twig", ['supplier' => $supplier]);
@@ -59,43 +59,39 @@ class SupplierController extends Controller
     public function newSupplierAction(Request $request)
     {
         $defaultData = array('message' => 'Type your message here');
-        $form = $this->createFormBuilder($defaultData)
-            ->add('productName', TextType::class)
-            ->add('productDescription', TextareaType::class)
-            ->add('productImage', FileType::class)
+        $supplier = new Supplier();
+        $form = $this->createFormBuilder($supplier)
+            ->add('supplierName', TextType::class)
+//            ->add('productDescription', TextareaType::class)
+//            ->add('productImage', FileType::class)
             ->add('createdAtDate', DateType::class)
 //            ->add('createdAtDate', DateTimeType::class)
-            ->add('feature', ChoiceType::class, [
-                'choices' => $this->getAllFeatures(),
-                'choice_label' => function ($feature, $key, $index) {
-                    /** @var Feature $feature */
-                    return strtoupper($feature->getFeatureName());
-                },
-            ])
-            ->add('category', ChoiceType::class, [
-                'choices' => $this->getAllCategories(),
-                'choice_label' => function ($Categories, $key, $index) {
-                    /** @var Category $Categories */
-                    return strtoupper($Categories->getCategoryName());
-                },
-            ])//$Categories
-            ->add('save', SubmitType::class, array('label' => 'Create product'))
+//            ->add('feature', ChoiceType::class, [
+//                'choices' => $this->getAllSuppliers(),
+//                'choice_label' => function ($feature, $key, $index) {
+//                    /** @var Feature $feature */
+//                    return strtoupper($feature->getFeatureName());
+//                },
+//            ])
+//            ->add('category', ChoiceType::class, [
+//                'choices' => $this->getAllCategories(),
+//                'choice_label' => function ($Categories, $key, $index) {
+//                    /** @var Category $Categories */
+//                    return strtoupper($Categories->getCategoryName());
+//                },
+//            ])
+            ->add('save', SubmitType::class, array('label' => 'Create Supplier'))
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // data is an array with "name", "email", and "message" keys
-            $data = $form->getData();
-            $product = new Product();
-            $product->setProductName($data['productName']);
-            $product->setCreatedAtDate($data['createdAtDate']);
-            $product->addFeatures($data['feature']);
-            $product->setCategory($data['category']);
+            $supplier = $form->getData();
 
-            $this->addNewProduct($product);
+            $this->addNewSupplier($supplier);
 
-            return $this->redirectToRoute('products');
+            return $this->redirectToRoute('suppliers');
         }
 
         return $this->render('default/new_product.html.twig', array(
@@ -104,40 +100,40 @@ class SupplierController extends Controller
     }
 
     /**
-     * @Route("/supplier/update/{$supplier_id}", name="update_supplier")
+     * @Route("/supplier/update/{supplier_id}", name="update_supplier")
      */
     public function updateSupplierAction(Request $request, $supplier_id)
     {
         $em = $this->getDoctrine()->getManager();
-        $product = $em->getRepository('AppBundle:Product')->find($product_id);
+        $supplier = $em->getRepository('AppBundle:Supplier')->find($supplier_id);
 
-        if (!$product) {
+        if (!$supplier) {
             throw $this->createNotFoundException(
-                'No product found for id ' . $product_id
+                'No Supplier found for id ' . $supplier_id
             );
         }
 
 
-        $form = $this->createFormBuilder($product)
-            ->add('productName', TextType::class)
+        $form = $this->createFormBuilder($supplier)
+            ->add('supplierName', TextType::class)
             ->add('createdAtDate', DateType::class)
-            ->add('features', ChoiceType::class, [
-                'choices' => $this->getAllFeatures(),
-                'choice_label' => function ($feature, $key, $index) {
-                    /** @var Feature $feature */
-                    return strtoupper($feature->getFeatureName());
-                },
-            ])
-            ->add('category', ChoiceType::class, [
-                'choices' => $this->getAllCategories(),
-                'choice_label' => function ($Categories, $key, $index) {
-                    /** @var Category $Categories */
-                    return strtoupper($Categories->getCategoryName());
-                },
-            ])//$Categories
-            ->add('save', SubmitType::class, array('label' => 'Update product'))
+//            ->add('createdAtDate', DateTimeType::class)
+//            ->add('feature', ChoiceType::class, [
+//                'choices' => $this->getAllSuppliers(),
+//                'choice_label' => function ($feature, $key, $index) {
+//                    /** @var Feature $feature */
+//                    return strtoupper($feature->getFeatureName());
+//                },
+//            ])
+//            ->add('category', ChoiceType::class, [
+//                'choices' => $this->getAllCategories(),
+//                'choice_label' => function ($Categories, $key, $index) {
+//                    /** @var Category $Categories */
+//                    return strtoupper($Categories->getCategoryName());
+//                },
+//            ])
+            ->add('save', SubmitType::class, array('label' => 'Update Supplier'))
             ->getForm();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -145,36 +141,36 @@ class SupplierController extends Controller
 
             $em->flush();
 
-            return $this->redirectToRoute('products');
+            return $this->redirectToRoute('suppliers');
         }
 
-        return $this->render('default/new_product.html.twig', array(
+        return $this->render('default/new_Supplier.html.twig', array(
             'form' => $form->createView(),
         ));
 
     }
 
     /**
-     * @Route("/supplier/delete/{$supplier_id}", name="delete_supplier")
+     * @Route("/supplier/delete/{supplier_id}", name="delete_supplier")
      */
     public function deleteSupplierAction(Request $request, $supplier_id)
     {
         $em = $this->getDoctrine()->getManager();
-        $product = $em->getRepository('AppBundle:Product')->find($product_id);
+        $supplier = $em->getRepository('AppBundle:Supplier')->find($supplier_id);
 
-        $em->remove($product);
+        $em->remove($supplier);
         $em->flush();
 
-        return $this->redirectToRoute('products');
+        return $this->redirectToRoute('suppliers');
 
     }
 
 
     /////////////////////////////////// UTILS Functions ////////////////////////////////////////
-    public function addNewSupplier($suppliert)
+    public function addNewSupplier($supplier)
     {
         $em = $this->getDoctrine()->getManager();
-        $em->persist($suppliert);
+        $em->persist($supplier);
 
         // actually executes the queries (i.e. the INSERT query)
         $em->flush();

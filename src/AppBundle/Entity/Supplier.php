@@ -56,7 +56,7 @@ class Supplier
 //     */
 
     /**
-     * @OneToMany(targetEntity="Product", mappedBy="supplier",cascade={"persist"})
+     * @OneToMany(targetEntity="Product", mappedBy="supplier", cascade={"persist", "remove"})
      */
     private $products;
 

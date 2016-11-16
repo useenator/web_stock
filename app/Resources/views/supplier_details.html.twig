@@ -8,6 +8,7 @@
 
         Name : {{ supplier.supplierName }} </br>
 
+        <a href="{{ path('update_supplier', {supplier_id: supplier.id}) }}">Edit</a>
         <h6>Products :</h6>
         <ul>
             {% for p in supplier.products%}

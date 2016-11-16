@@ -1,33 +1,34 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div>
     <div>
-        <a href="{{ path('add_product') }}">Add_product</a>
+        <div>
+            <a href="{{ path('add_product') }}">Add_product</a>
 
-        <h3>ProductS list</h3>
+            <h3>ProductS list</h3>
 
-        <ul>
+            <ul>
 
-            {% for product in products%}
-                </br>
-                Product name : {{ product.productName }} <a href="{{ path('productDetails', {product_id: product.id}) }}">LINK</a>
-                <a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>
-                <a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>
-                category : {{ product.category.categoryName}}</br>
-                supplier : {{ product.supplier.supplierName}}</br>
-                Date : {{ product.createdAtDate | date }}</br>
-
-
-            {% endfor %}
-
-        </ul>
+                {% for product in products %}
+                    </br>
+                    Product name : {{ product.productName }} <a
+                        href="{{ path('productDetails', {product_id: product.id}) }}">LINK</a>
+                    <a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>
+                    <a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>
+                    category : {{ product.category.categoryName }}<br/>
+                    supplier : {{ product.supplier.supplierName }}<br/>
+                    Date : {{ product.createdAtDate | date }}<br/>
 
 
+                {% endfor %}
+
+            </ul>
+
+
+        </div>
+
+        <strong></strong>
     </div>
-
-    <strong></strong>
-</div>
 
 {% endblock %}
 
