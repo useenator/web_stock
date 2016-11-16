@@ -17,26 +17,12 @@
                 category : {{ product.category.categoryName}}</br>
                 supplier : {{ product.supplier.supplierName}}</br>
                 Date : {{ product.createdAtDate | date }}</br>
-                Product Features :</br>
-                <ul>
-                    {% for f in product.features%}
-                        <li>{{ f.featureName}} </li>
-                    {% endfor %}
 
-                </ul>
 
             {% endfor %}
 
         </ul>
 
-        <h3>Features list</h3>
-        <ul>
-
-            {% for f in features%}
-                <li>{{ f.featureName}} </li>
-            {% endfor %}
-
-        </ul>
 
     </div>
 

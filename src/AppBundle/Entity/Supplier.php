@@ -42,27 +42,29 @@ class Supplier
 //     *      )
 //     */
 
-//    /**  Many-To-Many, Unidirectional
-//     * @ManyToMany(targetEntity="Feature",cascade={"persist"})
-//     * @JoinTable(name="product_features",
-//     *      joinColumns={@JoinColumn(name="product_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@JoinColumn(name="feature_id", referencedColumnName="id")}
+//    /** One-To-Many, Unidirectional with Join Table
+//     * @ManyToMany(targetEntity="Product",cascade={"persist"})
+//     * @JoinTable(name="supplier_product",
+//     *      joinColumns={@JoinColumn(name="supplier_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@JoinColumn(name="product_id", referencedColumnName="id", unique=true)}
 //     *      )
 //     */
 
-    /**  One-To-Many, Unidirectional
-     * @ManyToMany(targetEntity="Product",cascade={"persist"})
-     *
+//    /**  One-To-Many, Unidirectional
+//     * @ManyToMany(targetEntity="Product",cascade={"persist"})
+//     *
+//     */
+
+    /**
+     * @OneToMany(targetEntity="Product", mappedBy="supplier",cascade={"persist"})
      */
     private $products;
-
 
 
     /**
      * @ORM\Column(name="createdAtDate", type="datetime")
      */
     protected $createdAtDate;
-
 
 
     /**

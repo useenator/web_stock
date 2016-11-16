@@ -28,18 +28,17 @@ class SupplierController extends Controller
      */
     public function suppliersAction(Request $request)
     {
-         //$this->addSomeSuppliers();
-        $products = "PRODUCTS";
+        // $this->addSomeSuppliers();
 
-//        $features = $this->getAllFeatures();
         $suppliers = $this->getAllSuppliers();
 
-        return $this->render("suppliers.html.twig", [ 'suppliers' => $suppliers]);
+        return $this->render("suppliers.html.twig", ['suppliers' => $suppliers]);
     }
 
     /**
      * @Route("/suppliers/{supplier_id}", name="supplierDetails")
      * @param integer $supplier_id
+     * @return Response
      */
     public function supplierDetailsAction(Request $request, $supplier_id)
     {
@@ -156,7 +155,7 @@ class SupplierController extends Controller
     }
 
     /**
-     * @Route("/supplier/delete/{$supplier_id}", name="delete_product")
+     * @Route("/supplier/delete/{$supplier_id}", name="delete_supplier")
      */
     public function deleteSupplierAction(Request $request, $supplier_id)
     {
@@ -185,6 +184,8 @@ class SupplierController extends Controller
     {
         $category = new Category();
         $category->setCategoryName('Desktop');
+        $category0 = new Category();
+        $category0->setCategoryName('Desktop');
 
         $supplier = new Supplier();
         $supplier->setSupplierName("supplier 1");
@@ -208,7 +209,7 @@ class SupplierController extends Controller
         $product0->setCreatedAtDate(new \DateTime());
         $product0->addFeatures($feature);
         $product0->addFeatures($feature1);
-        $product0->setCategory($category);
+        $product0->setCategory($category0);
         $product0->setSupplier($supplier);
 
         $product = new Product();
@@ -232,7 +233,7 @@ class SupplierController extends Controller
         $supplier0->addProducts($product1);
 
         $em = $this->getDoctrine()->getManager();
-        $em->persist($product);
+        // $em->persist($product);
         $em->persist($supplier0);
         $em->persist($supplier);
         //  $em->persist($category);

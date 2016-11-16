@@ -51,15 +51,13 @@ class Product
 //     *      )
 //     */
 
-    /**  One-To-Many, Unidirectional
-     * @ManyToMany(targetEntity="Feature",cascade={"persist"})
-     *
-     */
-    private $features;
-
+//    /**  One-To-Many, Unidirectional
+//     * @ManyToMany(targetEntity="Feature",cascade={"persist"})
+//     *
+//     */
 
     /**
-     * @ManyToOne(targetEntity="AppBundle\Entity\Supplier", inversedBy="products")
+     * @ManyToOne(targetEntity="Supplier",inversedBy="products")
      * @JoinColumn(name="supplier_id", referencedColumnName="id")
      */
     private $supplier;
@@ -75,7 +73,6 @@ class Product
      * @ORM\Column(name="createdAtDate", type="datetime")
      */
     protected $createdAtDate;
-
 
 
     /**
@@ -139,34 +136,6 @@ class Product
         $this->productName = $productName;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFeatures()
-    {
-        return $this->features;
-    }
-
-    /**
-     * @param mixed $features
-     */
-    public function setFeatures($feature)
-    {
-        $this->features->clear();
-        if (!$this->features->contains($feature)) {
-            $this->features->add($feature);
-        }
-
-    }
-    //todo: got me to lot of trouble in form builder
-    // $this->features = $features;
-
-
-    public
-    function addFeatures($feature)
-    {
-        $this->features->add($feature);
-    }
 
     /**
      * @return mixed

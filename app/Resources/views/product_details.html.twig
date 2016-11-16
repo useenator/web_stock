@@ -12,13 +12,13 @@
         category : {{ product.category.categoryName}}</br>
         Date : {{ product.createdAtDate | date }} date('h:m d M Y ')
 
-        <h6>Product Features :</h6>
-        <ul>
-            {% for f in product.features%}
-                <li>{{ f.featureName}}</li>
-            {% endfor %}
+        {#<h6>Product Features :</h6>#}
+        {#<ul>#}
+            {#{% for f in product.features%}#}
+                {#<li>{{ f.featureName}}</li>#}
+            {#{% endfor %}#}
 
-        </ul>
+        {#</ul>#}
     </ul>
 </div>
 {% endblock %}
