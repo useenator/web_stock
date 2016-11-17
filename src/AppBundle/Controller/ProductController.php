@@ -25,10 +25,11 @@ class ProductController extends Controller
 
     /**
      * @Route("/products", name="products")
+     * @return Response
      */
-    public function productsAction(Request $request)
+    public function productsAction()
     {
-   // $this->addSomeProducts();
+//   $this->addSomeProducts();
 
         $products = $this->getAllProducts();
 
@@ -38,8 +39,9 @@ class ProductController extends Controller
     /**
      * @Route("/products/{product_id}", name="productDetails")
      * @param integer $product_id
+     * @return Response
      */
-    public function productDetailsAction(Request $request, $product_id)
+    public function productDetailsAction($product_id)
     {
         //$features = $this->getDoctrine()->getManager()->getRepository('AppBundle:Feature')->findAll();
         $product = $this->getDoctrine()->getManager()->getRepository('AppBundle:Product')->find($product_id);
@@ -54,28 +56,27 @@ class ProductController extends Controller
 
     /**
      * @Route("/new", name="add_product")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
-        $defaultData = array('message' => 'Type your message here');
-        $form = $this->createFormBuilder($defaultData)
+        $product = new Product();
+        $form = $this->createFormBuilder($product)
             ->add('productName', TextType::class)
-//            ->add('productDescription', TextareaType::class)
-//            ->add('productImage', FileType::class)
             ->add('createdAtDate', DateType::class)
-//            ->add('createdAtDate', DateTimeType::class)
 //            ->add('features', ChoiceType::class, [
 //                'choices' => $this->getAllFeatures(),
-//                'choice_label' => function ($feature, $key, $index) {
-//                    /** @var Feature $feature */
-//                    return strtoupper($feature->getFeatureName());
+//                'choice_label' => function ($features, $key, $index) {
+//                    /** @var Feature $features */
+//                    return strtoupper($features->getFeatureName());
 //                },
 //            ])
             ->add('supplier', ChoiceType::class, [
                 'choices' => $this->getAllSuppliers(),
-                'choice_label' => function ($supplier, $key, $index) {
-                    /** @var Supplier $supplier */
-                    return strtoupper($supplier->getSupplierName());
+                'choice_label' => function ($suppliers, $key, $index) {
+                    /** @var Supplier $suppliers */
+                    return strtoupper($suppliers->getSupplierName());
                 },
             ])
             ->add('category', ChoiceType::class, [
@@ -91,15 +92,15 @@ class ProductController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // data is an array with "name", "email", and "message" keys
-            $data = $form->getData();
-            $product = new Product();
-            $product->setProductName($data['productName']);
-            $product->setCreatedAtDate($data['createdAtDate']);
-            $product->setSupplier($data['supplier']);
-//            $product->addFeature($data['features']);
-            $product->setCategory($data['category']);
-
+//            // data is an array with "name", "email", and "message" keys
+//            $data = $form->getData();
+//            $product = new Product();
+//            $product->setProductName($data['productName']);
+//            $product->setCreatedAtDate($data['createdAtDate']);
+//            $product->setSupplier($data['supplier']);
+////            $product->addFeature($data['features']);
+//            $product->setCategory($data['category']);
+            $product = $form->getData();
             $this->addNewProduct($product);
 
             return $this->redirectToRoute('products');
@@ -112,6 +113,9 @@ class ProductController extends Controller
 
     /**
      * @Route("/update/{product_id}", name="update_product")
+     * @param Request $request
+     * @param $product_id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function updateAction(Request $request, $product_id)
     {
@@ -170,8 +174,10 @@ class ProductController extends Controller
 
     /**
      * @Route("/delete/{product_id}", name="delete_product")
+     * @param $product_id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Request $request, $product_id)
+    public function deleteAction($product_id)
     {
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($product_id);
@@ -185,7 +191,7 @@ class ProductController extends Controller
 
 
     /////////////////////////////////// UTILS Functions ////////////////////////////////////////
-    public function addNewProduct($product)
+    public  function addNewProduct($product)
     {
         $em = $this->getDoctrine()->getManager();
         $em->persist($product);

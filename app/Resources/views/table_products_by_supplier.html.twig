@@ -1,0 +1,37 @@
+
+
+{% block body %}
+    {#************************** table product by supplier *******************************#}
+    <table class="table">
+        <tr>
+            <th>Product</th>
+            <th>Supplier</th>
+            <th>Category</th>
+            <th>CreatedAtDate</th>
+        </tr>
+
+
+        {% for product in supplier.products %}
+
+            <tr>
+                <td>
+                    <a href="{{ path('productDetails', {product_id: product.id}) }}">{{ product.productName }}</a>
+                </td>
+                <td>{{ product.supplier.supplierName }}</td>
+                <td>{{ product.category.categoryName }}</td>
+                <td>{{ product.createdAtDate | date }}</td>
+                <td><a class="btn btn-xs btn-info" href="{{ path('update_product_by_supplier', {supplier_id: product.supplier.id, product_id: product.id}) }}">Edit</a></td>
+                <td><a class="btn btn-xs  btn-danger" href="{{ path('delete_product_by_supplier', {supplier_id: product.supplier.id, product_id: product.id}) }}">Delete</a></td>
+            </tr>
+
+
+
+
+        {% endfor %}
+    </table>
+
+    {#************************** End table product by supplier *******************************#}
+{% endblock %}
+
+
+

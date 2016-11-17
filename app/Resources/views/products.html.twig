@@ -3,27 +3,55 @@
 {% block body %}
     <div>
         <div>
-            <a href="{{ path('add_product') }}">Add_product</a>
+            <a class="btn btn-warning" href="{{ path('add_product') }}">Add product</a>
 
             <h3>ProductS list</h3>
 
-            <ul>
+            {#<ul>#}
+
+                {#{% for product in products %}#}
+                    {#</br>#}
+                    {#Product name : {{ product.productName }} <a#}
+                        {#href="{{ path('productDetails', {product_id: product.id}) }}">LINK</a>#}
+                    {#<a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>#}
+                    {#<a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>#}
+                    {#category : {{ product.category.categoryName }}<br/>#}
+                    {#supplier : {{ product.supplier.supplierName }}<br/>#}
+                    {#Date : {{ product.createdAtDate | date }}<br/>#}
+
+
+                {#{% endfor %}#}
+
+            {#</ul>#}
+            {#from supplier details#}
+            <table class="table">
+                <tr>
+                    <th>Product</th>
+                    <th>Supplier</th>
+                    <th>Category</th>
+                    <th>CreatedAtDate</th>
+                </tr>
+
 
                 {% for product in products %}
-                    </br>
-                    Product name : {{ product.productName }} <a
-                        href="{{ path('productDetails', {product_id: product.id}) }}">LINK</a>
-                    <a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>
-                    <a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>
-                    category : {{ product.category.categoryName }}<br/>
-                    supplier : {{ product.supplier.supplierName }}<br/>
-                    Date : {{ product.createdAtDate | date }}<br/>
+
+                    <tr>
+                        <td>
+                            <a href="{{ path('productDetails', {product_id: product.id}) }}">{{ product.productName }}</a>
+                        </td>
+                        <td>{{ product.supplier.supplierName }}</td>
+                        <td>{{ product.category.categoryName }}</td>
+                        <td>{{ product.createdAtDate | date }}</td>
+                        <td><a class="btn btn-xs btn-info" href="{{ path('update_product', {product_id: product.id}) }}">Edit</a></td>
+                        <td><a class="btn btn-xs  btn-danger" href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></td>
+                    </tr>
+
+
+
 
 
                 {% endfor %}
-
-            </ul>
-
+            </table>
 
         </div>
 

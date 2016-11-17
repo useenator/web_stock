@@ -1,56 +1,86 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div>
     <div>
+        <div>
+            <a class="btn btn-warning" href="{{ path('add_supplier') }}">Add Supplier</a>
 
-        <h3>Suppliers list</h3>
+            <h3>Suppliers list</h3>
 
-        <ul>
+            {#*********** table *********#}
+            <table class="table">
+                <tr>
 
-            {% for supplier in suppliers%}
-                </br>
-                Product name : {{ supplier.supplierName}}
-                <a href="{{ path('supplierDetails', {supplier_id: supplier.id}) }}">LINK</a>
-                <a href="{{ path('update_supplier', {supplier_id: supplier.id}) }}">Edit</a>
-                <a href="{{ path('delete_supplier', {supplier_id: supplier.id}) }}">Delete</a>
+                    <th>Supplier name</th>
+                    <th>CreatedAtDate</th>
+                </tr>
 
-                <h6>Products :</h6>
-                <ul>
-                    {% for p in supplier.products%}
-                        <li>{{ p.productName}}</li>
-                    {% endfor %}
+                {% for supplier in suppliers %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('supplierDetails', {supplier_id: supplier.id}) }}"> {{ supplier.supplierName }}</a>
+                        </td>
+                        <td> {{ supplier.createdAtDate | date }}</td>
+                        <td><a href="{{ path('supplierDetails', {supplier_id: supplier.id}) }}">LINK</a></td>
+                        <td>
+                            <a class="btn btn-xs btn-info"
+                               href="{{ path('update_supplier', {supplier_id: supplier.id}) }}">Edit</a>
+                        </td>
+                        <td><a class="btn btn-xs  btn-danger"
+                               href="{{ path('delete_supplier', {supplier_id: supplier.id}) }}">Delete</a></td>
 
-                </ul>
-                {#<a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>#}
-                {#<a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>#}
-                {#category : {{ product.category.categoryName}}</br>#}
-                {#Date : {{ product.createdAtDate | date }}</br>#}
-                {#Product Features :</br>#}
-                {#<ul>#}
+
+                        <td>
+                            {#*******************nested table*****************************#}
+                            {#************************** table product by supplier ***********************************#}
+                            {% include 'table_products_by_supplier.html.twig' %}
+                            {#************************** End table product by supplier *******************************#}
+                            {#*******************End nested table*************************#}
+
+
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+            {#********** end table **********#}
+        </div>
+
+        <div>
+            <ul>
+
+                {% for supplier in suppliers %}
+                    </br>
+                    Supplier name : {{ supplier.supplierName }}
+                    <a href="{{ path('supplierDetails', {supplier_id: supplier.id}) }}">LINK</a>
+                    <a href="{{ path('update_supplier', {supplier_id: supplier.id}) }}">Edit</a>
+                    <a href="{{ path('delete_supplier', {supplier_id: supplier.id}) }}">Delete</a>
+
+                    <h6>Products :</h6>
+                    <ul>
+                        {% for p in supplier.products %}
+                            <li>{{ p.productName }}</li>
+                        {% endfor %}
+
+                    </ul>
+                    {#<a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>#}
+                    {#<a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>#}
+                    {#category : {{ product.category.categoryName}}</br>#}
+                    {#Date : {{ product.createdAtDate | date }}</br>#}
+                    {#Product Features :</br>#}
+                    {#<ul>#}
                     {#{% for f in product.features%}#}
-                        {#<li>{{ f.featureName}} </li>#}
+                    {#<li>{{ f.featureName}} </li>#}
                     {#{% endfor %}#}
 
-                {#</ul>#}
+                    {#</ul>#}
 
-            {% endfor %}
+                {% endfor %}
 
-        </ul>
-
-        {#<h3>Features list</h3>#}
-        {#<ul>#}
-
-            {#{% for f in features%}#}
-                {#<li>{{ f.featureName}} </li>#}
-            {#{% endfor %}#}
-
-        {#</ul>#}
-
+            </ul>
+        </div>
     </div>
-
-    <strong></strong>
-</div>
 
 {% endblock %}
 
