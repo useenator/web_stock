@@ -33,6 +33,7 @@
                         <td>
                             {#*******************nested table*****************************#}
                             {#************************** table product by supplier ***********************************#}
+                            {% set products =supplier.products %}
                             {% include 'table_products_by_supplier.html.twig' %}
                             {#************************** End table product by supplier *******************************#}
                             {#*******************End nested table*************************#}

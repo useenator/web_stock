@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h3>Receipt Voucher Details</h3>
+
+
+
+
+    ID : {{ receipt.id }}<br/>
+    Name : {{ receipt.receiptName }}
+    <a class="btn btn-xs btn-info" href="{{ path('update_receipt', {receipt_id: receipt.id}) }}">Edit</a>
+    <a class="btn btn-xs btn-danger" href="{{ path('delete_receipt', {receipt_id: receipt.id}) }}">Delete</a>
+    <br/>
+    {#<a class="btn btn-xs btn-warning" href="{{ path('add_product_by_supplier', {receipt_id: receipt.id}) }}">Add product</a>#}
+
+    <a class="btn btn-xs btn-warning" href="{{ path('add_product_to_receipt', {receipt_id: receipt.id}) }}">Add product</a>
+
+    {% set products =receipt.products %}
+    {#Looping through the products.#}
+    <div class="panel panel-default">
+        <div class="panel-heading">Products :</div>
+        {#************************** table product by supplier **********************************#}
+        {% include 'table_products_by_supplier.html.twig' %}
+        {#************************** End table product by supplier ******************************#}
+
+    </div>
+
+
+    {#<ul class="list-group">#}
+
+    {#{% for product in supplier.products %}#}
+    {#<li class="list-group-item">#}
+
+    {#<a href="{{ path('productDetails', {product_id: product.id}) }}">{{ product.productName }}</a>#}
+    {#{{ product.supplier.supplierName }}#}
+    {#{{ product.category.categoryName }}#}
+    {#{{ product.createdAtDate | date }}#}
+    {#<a href="{{ path('update_product', {product_id: product.id}) }}">Edit</a>#}
+    {#<a href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></br>#}
+    {#</li>#}
+    {#{% endfor %}#}
+
+    {#</ul>#}
+
+{% endblock %}
+
+
+

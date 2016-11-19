@@ -7,11 +7,12 @@
             <th>Product</th>
             <th>Supplier</th>
             <th>Category</th>
+            <th>Quantity</th>
             <th>CreatedAtDate</th>
         </tr>
 
 
-        {% for product in supplier.products %}
+        {% for product in products %}
 
             <tr>
                 <td>
@@ -19,6 +20,7 @@
                 </td>
                 <td>{{ product.supplier.supplierName }}</td>
                 <td>{{ product.category.categoryName }}</td>
+                <td>{{ product.quantity}}</td>
                 <td>{{ product.createdAtDate | date }}</td>
                 <td><a class="btn btn-xs btn-info" href="{{ path('update_product_by_supplier', {supplier_id: product.supplier.id, product_id: product.id}) }}">Edit</a></td>
                 <td><a class="btn btn-xs  btn-danger" href="{{ path('delete_product_by_supplier', {supplier_id: product.supplier.id, product_id: product.id}) }}">Delete</a></td>

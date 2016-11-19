@@ -20,61 +20,61 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
-class SupplierController extends Controller
+class ReceiptVoucherController extends Controller
 {
 
 
     /**
-     * @Route("/suppliers", name="suppliers")
+     * @Route("/Receipts", name="receipts")
      */
-    public function suppliersAction(Request $request)
+    public function ReceiptsAction(Request $request)
     {
         // $this->addSomeSuppliers();
-        $this->addSomeReceipVoucher();
+        //$this->addSomeReceipVoucher();
 
-        $suppliers = $this->getAllSuppliers();
+        $receipts = $this->getAllReceipts();
 
-        return $this->render("suppliers.html.twig", ['suppliers' => $suppliers]);
+        return $this->render("receipts.html.twig", ['receipts' => $receipts]);
     }
 
     /**
-     * @Route("/suppliers/{supplier_id}", name="supplierDetails")
-     * @param integer $supplier_id
+     * @Route("/Receipts/{receipt_id}", name="receiptDetails")
+     * @param integer $receipt_id
      * @return Response
      */
-    public function supplierDetailsAction(Request $request, $supplier_id)
+    public function receiptDetailsAction(Request $request, $receipt_id)
     {
         //$features = $this->getDoctrine()->getManager()->getRepository('AppBundle:Feature')->findAll();
-        $supplier = $this->getDoctrine()->getManager()->getRepository('AppBundle:Supplier')->find($supplier_id);
+        $receipt = $this->getDoctrine()->getManager()->getRepository('AppBundle:ReceiptVoucher')->find($receipt_id);
 
-        if (!$supplier) {
+        if (!$receipt) {
             throw $this->createNotFoundException(
-                'No product found for id ' . $supplier_id
+                'No receipt found for id ' . $receipt_id
             );
         }
-        return $this->render("supplier_details.html.twig", ['supplier' => $supplier]);
+        return $this->render("receipt_details.html.twig", ['receipt' => $receipt]);
     }
 
     /**
-     * @Route("/supplier/new", name="add_supplier")
+     * @Route("/receipt/new", name="add_receipt")
      */
-    public function newSupplierAction(Request $request)
+    public function newReceiptAction(Request $request)
     {
         $defaultData = array('message' => 'Type your message here');
-        $supplier = new Supplier();
-        $form = $this->createFormBuilder($supplier)
-            ->add('supplierName', TextType::class)
+        $receipt = new ReceiptVoucher();
+        $form = $this->createFormBuilder($receipt)
+            ->add('receiptName', TextType::class)
 //            ->add('productDescription', TextareaType::class)
 //            ->add('productImage', FileType::class)
             ->add('createdAtDate', DateType::class)
 //            ->add('createdAtDate', DateTimeType::class)
-//            ->add('feature', ChoiceType::class, [
-//                'choices' => $this->getAllSuppliers(),
-//                'choice_label' => function ($feature, $key, $index) {
-//                    /** @var Feature $feature */
-//                    return strtoupper($feature->getFeatureName());
-//                },
-//            ])
+            ->add('supplier', ChoiceType::class, [
+                'choices' => $this->getAllSuppliers(),
+                'choice_label' => function ($supplier, $key, $index) {
+                    /** @var Supplier $supplier */
+                    return strtoupper($supplier->getSupplierName());
+                },
+            ])
 //            ->add('category', ChoiceType::class, [
 //                'choices' => $this->getAllCategories(),
 //                'choice_label' => function ($Categories, $key, $index) {
@@ -82,18 +82,29 @@ class SupplierController extends Controller
 //                    return strtoupper($Categories->getCategoryName());
 //                },
 //            ])
-            ->add('save', SubmitType::class, array('label' => 'Create Supplier'))
+            ->add('save', SubmitType::class, array('label' => 'Create Receipt'))
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // data is an array with "name", "email", and "message" keys
-            $supplier = $form->getData();
+            $receipt = $form->getData();
+            $products = $this->getAllProducts();
 
-            $this->addNewSupplier($supplier);
+//            $receipt=new ReceiptVoucher();
+            $em = $this->getDoctrine()->getManager();
+            $prod2 = $em->getRepository('AppBundle:Product')->find(4);
+            $prod1 = $em->getRepository('AppBundle:Product')->find(3);
 
-            return $this->redirectToRoute('suppliers');
+//            $receipt->addProducts($prod1);
+//            $receipt->addProducts($prod2);
+            //$receipt->setProducts($products);
+//          $ReceiptVouchers = $this->getDoctrine()->getManager()->getRepository('AppBundle:ReceiptVoucher')->findOneBy();
+//            $receipt->receiptName="R0".$this->id;
+            $this->addNewReceipt($receipt);
+
+            return $this->redirectToRoute('receipts');
         }
 
         return $this->render('default/new_product.html.twig', array(
@@ -102,31 +113,33 @@ class SupplierController extends Controller
     }
 
     /**
-     * @Route("/supplier/update/{supplier_id}", name="update_supplier")
+     * @Route("/receipt/update/{receipt_id}", name="update_receipt")
      */
-    public function updateSupplierAction(Request $request, $supplier_id)
+    public function updateReceiptAction(Request $request, $receipt_id)
     {
         $em = $this->getDoctrine()->getManager();
-        $supplier = $em->getRepository('AppBundle:Supplier')->find($supplier_id);
+        $receipt = $em->getRepository('AppBundle:ReceiptVoucher')->find($receipt_id);
 
-        if (!$supplier) {
+        if (!$receipt) {
             throw $this->createNotFoundException(
-                'No Supplier found for id ' . $supplier_id
+                'No Supplier found for id ' . $receipt_id
             );
         }
 
 
-        $form = $this->createFormBuilder($supplier)
-            ->add('supplierName', TextType::class)
+        $form = $this->createFormBuilder($receipt)
+            ->add('receiptName', TextType::class)
+//            ->add('productDescription', TextareaType::class)
+//            ->add('productImage', FileType::class)
             ->add('createdAtDate', DateType::class)
 //            ->add('createdAtDate', DateTimeType::class)
-//            ->add('feature', ChoiceType::class, [
-//                'choices' => $this->getAllSuppliers(),
-//                'choice_label' => function ($feature, $key, $index) {
-//                    /** @var Feature $feature */
-//                    return strtoupper($feature->getFeatureName());
-//                },
-//            ])
+            ->add('supplier', ChoiceType::class, [
+                'choices' => $this->getAllSuppliers(),
+                'choice_label' => function ($supplier, $key, $index) {
+                    /** @var Supplier $supplier */
+                    return strtoupper($supplier->getSupplierName());
+                },
+            ])
 //            ->add('category', ChoiceType::class, [
 //                'choices' => $this->getAllCategories(),
 //                'choice_label' => function ($Categories, $key, $index) {
@@ -134,16 +147,17 @@ class SupplierController extends Controller
 //                    return strtoupper($Categories->getCategoryName());
 //                },
 //            ])
-            ->add('save', SubmitType::class, array('label' => 'Update Supplier'))
+            ->add('save', SubmitType::class, array('label' => 'Update Receipt'))
             ->getForm();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $product = $form->getData();
+            $receipt = $form->getData();
 
             $em->flush();
 
-            return $this->redirectToRoute('suppliers');
+            return $this->redirectToRoute('receiptDetails', ['receipt_id' => $receipt_id]);
         }
 
         return $this->render('default/new_Supplier.html.twig', array(
@@ -153,52 +167,67 @@ class SupplierController extends Controller
     }
 
     /**
-     * @Route("/supplier/delete/{supplier_id}", name="delete_supplier")
+     * @Route("/receipt/delete/{receipt_id}", name="delete_receipt")
      */
-    public function deleteSupplierAction(Request $request, $supplier_id)
+    public function deleteReceiptAction(Request $request, $receipt_id)
     {
         $em = $this->getDoctrine()->getManager();
-        $supplier = $em->getRepository('AppBundle:Supplier')->find($supplier_id);
+        $receipt = $em->getRepository('AppBundle:ReceiptVoucher')->find($receipt_id);
 
-        $em->remove($supplier);
+        $em->remove($receipt);
         $em->flush();
 
-        return $this->redirectToRoute('suppliers');
+        return $this->redirectToRoute('receipts');
 
     }
 
     /**
-     * @Route("/supplier/{supplier_id}/add_product", name="add_product_by_supplier")
+     * @Route("/receipt/{receipt_id}/add_product", name="add_product_to_receipt")
      */
-    public function addProductSupplierAction(Request $request, $supplier_id)
+    public function addProductToReceiptAction(Request $request, $receipt_id)
     {
         $em = $this->getDoctrine()->getManager();
-        $supplier = $em->getRepository('AppBundle:Supplier')->find($supplier_id);
+        $receipt = $em->getRepository('AppBundle:ReceiptVoucher')->find($receipt_id);
 
         $product = new Product();
+//        $product ->getCategory()->getCategoryName();
 
-        $form = $this->createFormBuilder($product)
-            ->add('productName', TextType::class)
+        $defaultData = array('message' => 'Type your message here');
+        $form = $this->createFormBuilder($defaultData)
+//            ->add('productName', TextType::class)
             ->add('quantity', IntegerType::class)
-            ->add('createdAtDate', DateType::class)
+//            ->add('createdAtDate', DateType::class)
             //->add('supplier', EntityType::class, ['class' => 'AppBundle:Supplier', 'choice_label' => 'supplierName'])
-            ->add('category', ChoiceType::class, [
-                'choices' => $this->getAllCategories(),
-                'choice_label' => function ($Categories, $key, $index) {
-                    /** @var Category $Categories */
-                    return strtoupper($Categories->getCategoryName());
+            ->add('product', ChoiceType::class, [
+                'choices' => $this->getAllProducts(),
+                'choice_label' => function ($product, $key, $index) {
+                    /** @var Product $product */
+                    return strtoupper($product->getProductName());
                 },
             ])//$Categories
-            ->add('save', SubmitType::class, array('label' => 'Create product'))
+            ->add('save', SubmitType::class, array('label' => 'Add product'))
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $product = $form->getData();
-            $this->addProductForSupplier($product, $supplier);
-            return $this->redirectToRoute('supplierDetails', ['supplier_id' => $supplier_id]);
+            $data = $form->getData();
+            $product_id=$data["product"]->getId();
+            $quantity=$data["quantity"];
+            $product = $em->getRepository('AppBundle:Product')->find($product_id);
+            //todo: add quantity
+            $product->setQuantity($quantity+$product->getQuantity());
+
+            $this->addProductForReceipt($product,$receipt);
+//            var_dump($product["quantity"]);
+//            var_dump($product["product"]->getProductName());
+//            var_dump($product["product"]->getId());
+//            var_dump($product["product"]->getCategory()->getCategoryName());
+//            die();
+//            $this->addProductForSupplier($product, $supplier);
+//            return $this->redirectToRoute('supplierDetails', ['supplier_id' => $supplier_id]);
+            return $this->redirectToRoute('receiptDetails', ['receipt_id' => $receipt_id]);
         }
 
         return $this->render('default/new_product.html.twig', array(
@@ -288,10 +317,10 @@ class SupplierController extends Controller
     }
 
     /////////////////////////////////// UTILS Functions ////////////////////////////////////////
-    public function addNewSupplier($supplier)
+    public function addNewReceipt($receipt)
     {
         $em = $this->getDoctrine()->getManager();
-        $em->persist($supplier);
+        $em->persist($receipt);
 
         // actually executes the queries (i.e. the INSERT query)
         $em->flush();
@@ -378,7 +407,7 @@ class SupplierController extends Controller
 
         $receipt = $em->getRepository('AppBundle:ReceiptVoucher')->find(1);
         //$em->persist($receipt);
-      // $em->remove($receipt);
+        // $em->remove($receipt);
         $em->flush();
     }
 
@@ -389,6 +418,15 @@ class SupplierController extends Controller
     {
         $suppliers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Supplier')->findAll();
         return $suppliers;
+    }
+
+    /**
+     * @return \AppBundle\Entity\ReceiptVoucher[]|array
+     */
+    public function getAllReceipts()
+    {
+        $ReceiptVouchers = $this->getDoctrine()->getManager()->getRepository('AppBundle:ReceiptVoucher')->findAll();
+        return $ReceiptVouchers;
     }
 
     /**
@@ -407,15 +445,19 @@ class SupplierController extends Controller
     }
 
     /**
-     * @param $product
-     * @param $supplier
+     * @param Product $product
+     * @param ReceiptVoucher $receipt
+     * @internal param $supplier
      */
-    public function addProductForSupplier($product, $supplier)
+    public function addProductForReceipt(Product $product,ReceiptVoucher $receipt)
     {
+//        $receipt=new ReceiptVoucher();
+
         //set supplier for the product.
-        $product->setSupplier($supplier);
+//        $product->setSupplier($receipt);
+        $receipt->addProducts($product);
         $em = $this->getDoctrine()->getManager();
-        $em->persist($product);
+        $em->persist($receipt);
         // actually executes the queries (i.e. the INSERT query)
         $em->flush();
     }

@@ -3,9 +3,9 @@
 {% block body %}
     <div>
         <div>
-            <a class="btn btn-warning" href="{{ path('add_product') }}">Add product</a>
+            {#<a class="btn btn-warning" href="{{ path('add_product') }}">Add product</a>#}
 
-            <h3>ProductS list</h3>
+            <h3>Receipt list</h3>
 
             {#<ul>#}
 
@@ -26,26 +26,39 @@
             {#from supplier details#}
             <table class="table">
                 <tr>
-                    <th>Product</th>
+                    <th>id</th>
+                    <th>Receipt Name</th>
                     <th>Supplier</th>
-                    <th>Category</th>
-                    <th>Quantity</th>
+                    {#<th>Category</th>#}
                     <th>CreatedAtDate</th>
                 </tr>
 
 
-                {% for product in products %}
+                {% for receipt in receipts %}
 
                     <tr>
                         <td>
-                            <a href="{{ path('productDetails', {product_id: product.id}) }}">{{ product.productName }}</a>
+                            <a href="{{ path('receiptDetails', {receipt_id: receipt.id}) }}">{{ receipt.id }}</a>
                         </td>
-                        <td>{{ product.supplier.supplierName }}</td>
-                        <td>{{ product.category.categoryName }}</td>
-                        <td>{{ product.quantity }}</td>
-                        <td>{{ product.createdAtDate | date }}</td>
-                        <td><a class="btn btn-xs btn-info" href="{{ path('update_product', {product_id: product.id}) }}">Edit</a></td>
-                        <td><a class="btn btn-xs  btn-danger" href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></td>
+                        {#<td></td>#}
+                        <td>{{ receipt.receiptName}}</td>
+                        <td>{{ receipt.supplier.supplierName}}</td>
+                        <td>{{ receipt.createdAtDate | date }}</td>
+                        {#<td><a class="btn btn-xs btn-info" href="{{ path('update_product', {product_id: product.id}) }}">Edit</a></td>#}
+                        {#<td><a class="btn btn-xs  btn-danger" href="{{ path('delete_product', {product_id: product.id}) }}">Delete</a></td>#}
+                        <td>
+                            <a class="btn btn-xs btn-danger" href="{{ path('delete_receipt', {receipt_id: receipt.id}) }}">Delete</a></td>
+                        <td>
+                            {#*******************nested table*****************************#}
+                            {#************************** table product by supplier ***********************************#}
+                            {% set products =receipt.products %}
+                            {% include 'table_products_by_supplier.html.twig' %}
+                            {#************************** End table product by supplier *******************************#}
+                            {#*******************End nested table*************************#}
+
+
+
+                        </td>
                     </tr>
 
 

@@ -74,6 +74,26 @@ class Product
      */
     protected $createdAtDate;
 
+    /**
+     * @ORM\Column(name="quantity", type="integer",nullable=true)
+     */
+    private $quantity;
+
+    /**
+     * @return mixed
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @param mixed $quantity
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+    }
 
     /**
      * Product constructor .

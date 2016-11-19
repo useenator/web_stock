@@ -18,6 +18,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Products :</div>
             {#************************** table product by supplier **********************************#}
+            {% set products =supplier.products %}
             {% include 'table_products_by_supplier.html.twig' %}
             {#************************** End table product by supplier ******************************#}
 
